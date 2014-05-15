@@ -244,9 +244,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func server() {
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
-	panic("server end")
+	hhttp.HandleFunc("/", handler)
+    fmt.Println("listening...")
+    err := http.ListenAndServe(":"+os.Getenv("PORT"), nil) 
+    if err != nil {
+      panic(err)
+    }
 }
 
 func main() {
@@ -262,4 +265,6 @@ func main() {
 		go updateMenu()
 	}
 	
+	fmt.Println("server end")
+
 }
