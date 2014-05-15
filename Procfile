@@ -1,1 +1,1 @@
-web: ./menuformatter 
+web: menuformatter 
