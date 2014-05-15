@@ -7,6 +7,7 @@ import (
 	"strings"
 	"net/http"
 	"time"
+	"os"
 )
 
 type Day struct {
@@ -244,7 +245,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func server() {
-	hhttp.HandleFunc("/", handler)
+	http.HandleFunc("/", handler)
     fmt.Println("listening...")
     err := http.ListenAndServe(":"+os.Getenv("PORT"), nil) 
     if err != nil {
