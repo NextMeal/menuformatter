@@ -56,7 +56,7 @@ func (f *FoodNode) MakeArray() []string {
 //return a json formatted string for a day struct
 func (d Day) JSONString() string {
 	//breakfast
-	breakfast := string(`"breakfast"` + ":" + "[")
+	breakfast := string(`"B"` + ":" + "[")
 
 	breakfastArray := d.breakfast.MakeArray()
 
@@ -71,7 +71,7 @@ func (d Day) JSONString() string {
 	breakfast += "]"
 
 	//lunch
-	lunch := string(`"lunch"` + ":" + "[")
+	lunch := string(`"L"` + ":" + "[")
 
 	lunchArray := d.lunch.MakeArray()
 
@@ -86,7 +86,7 @@ func (d Day) JSONString() string {
 	lunch += "]"
 
 	//dinner
-	dinner := string(`"dinner"` + ":" + "[")
+	dinner := string(`"D"` + ":" + "[")
 
 	dinnerArray := d.dinner.MakeArray()
 
