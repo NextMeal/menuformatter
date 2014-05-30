@@ -104,7 +104,9 @@ func (d Day) JSONString() string {
 }
 
 func updateMenu() {
-	weekNumber := (time.Now().Unix() / 60 / 60 / 24 / 7 - 2 ) % 6
+	weekNumber := (time.Now().Unix() / 60 / 60 / 24 / 7 - 2 ) % 6 - 1
+
+	fmt.Println(weekNumber);
 
 	/*
 	// read local file
@@ -246,11 +248,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func server() {
 	http.HandleFunc("/", handler)
-    fmt.Println("listening...")
+	//http.ListenAndServe(":8080", nil)
+    
     err := http.ListenAndServe(":"+os.Getenv("PORT"), nil) 
+    fmt.Println("listening...")
     if err != nil {
       panic(err)
     }
+    
 }
 
 func main() {
