@@ -252,7 +252,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, jsonString)
 
 		counter++
-		fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\n Counter: " , counter)
+		fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\nCounter: " , counter)
 	}
 }
 
