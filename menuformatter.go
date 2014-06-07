@@ -30,7 +30,9 @@ var mealLabels = []string{"BREAKFAST", "LUNCH", "DINNER"}
 
 var dateLabels = []string{"-14", "-15"}
 
-var jsonString = "menu still updating..."
+var jsonString = "{\"array\":[]}"
+
+var counter = 0
 
 func (f *FoodNode) MakeArray() []string {
 	var count = 0
@@ -108,8 +110,8 @@ func updateMenu() {
 	seconds := time.Now().Unix() / 60 / 60 / 24
 	days := math.Floor(float64(seconds))
 	weekNumber := math.Mod((days + 4 ) / 7, 6) + 3
-	fmt.Println(days);
-	fmt.Println(weekNumber);
+	//fmt.Println(days);
+	//fmt.Println(weekNumber);
 
 	/*
 	// read local file
@@ -237,15 +239,20 @@ func updateMenu() {
 
 	jsonString += "}"
 
-	fmt.Println("menu updated at " + time.Now().Format("2006-01-02 15:04:05 -0700"))
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") + " menu updated.")
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
 
 	if strings.HasSuffix(r.URL.Path[1:], "about") {
 		fmt.Fprintf(w, "Menu formatter in Go")
+	} else if strings.Contains(r.URL.Path[1:], "favicon") {
+		fmt.Fprintf(w, "")
 	} else {
 		fmt.Fprintf(w, jsonString)
+
+		counter++
+		fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\n Counter: " , counter)
 	}
 }
 
@@ -254,7 +261,7 @@ func server() {
 	//http.ListenAndServe(":8080", nil)
     
     err := http.ListenAndServe(":"+os.Getenv("PORT"), nil) 
-    fmt.Println("listening...")
+    fmt.Println("Listening on " + os.Getenv("PORT"))
     if err != nil {
       panic(err)
     }
@@ -266,13 +273,13 @@ func main() {
 
 	go server()
 
-
 	go updateMenu()
 	t := time.NewTicker(30 * time.Second)
 
 	for now := range t.C {
 		now = now
 		go updateMenu()
+		//fmt.Println("Counter ", counter)
 	}
 	
 	fmt.Println("server end")
