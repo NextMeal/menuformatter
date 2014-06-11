@@ -239,7 +239,7 @@ func updateMenu() {
 
 	jsonString += "}"
 
-	fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") + " menu updated.")
+	//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") + " menu updated.")
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
