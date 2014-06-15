@@ -1,1 +1,11 @@
-this is a test
+Google Spreadsheet parser for United States Naval Academy menu written in Go.u
+
+- Spreadsheet located at: https://docs.google.com/a/usna.edu/spreadsheets/d/117RRZoomI9peIgAEQmvMPjo6dPvAEcbP7qyoLprwEJc/
+
+- Each week has a different spreadsheet GID.
+
+|1|2|3|4|5|6|
+--------
+|t|a|t|b|c|s|
+
+- Written in Go!
