@@ -3,9 +3,13 @@ Google Spreadsheet parser for United States Naval Academy menu written in Go.u
 - Spreadsheet located at: https://docs.google.com/a/usna.edu/spreadsheets/d/117RRZoomI9peIgAEQmvMPjo6dPvAEcbP7qyoLprwEJc/
 
 - Each week has a different spreadsheet GID.
+  - 685460203
+  - 1565036888
+  - 1997009880
+  - 586035798
+  - 1931583348
+  - 1449430959
 
-|1|2|3|4|5|6|
---------
-|t|a|t|b|c|s|
+- Listens on port specified in $PORT environment variable.
 
 - Written in Go!
