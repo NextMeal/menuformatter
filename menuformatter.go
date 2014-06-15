@@ -111,13 +111,15 @@ func updateMenu() {
 	days := math.Floor(float64(seconds))
 	weekNumber := math.Mod((days + 4 ) / 7, 6) + 3
 	//fmt.Println(days);
-	//fmt.Println(weekNumber);
 
 	/*
 	// read local file
 	b, err := ioutil.ReadFile("week1.json")
 	*/
-	resp, err := http.Get("https://spreadsheets.google.com/feeds/list/117RRZoomI9peIgAEQmvMPjo6dPvAEcbP7qyoLprwEJc/" + spreadsheetIds[int64(weekNumber - 1)] + "/public/values?hl=en_US&alt=json")
+
+	//spreadsheetIds[int64(weekNumber - 1) % 7]
+
+	resp, err := http.Get("https://spreadsheets.google.com/feeds/list/117RRZoomI9peIgAEQmvMPjo6dPvAEcbP7qyoLprwEJc/" + spreadsheetIds[int64(weekNumber) % 7] + "/public/values?hl=en_US&alt=json")
 	if err != nil {
 		panic(err)
 	}
