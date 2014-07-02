@@ -22,7 +22,10 @@ type FoodNode struct {
 	title string
 }
 
-var spreadsheetIds = []string{"685460203", "1565036888", "1997009880", "586035798", "1931583348", "1449430959"}
+//var spreadsheetIds = []string{"685460203", "1565036888", "1997009880", "586035798", "1931583348", "1449430959"}
+
+//https://www.mail-archive.com/google-docs-data-apis@googlegroups.com/msg00565.html
+var spreadsheetIds = []string{"1", "2", "3", "4", "5", "6"} 
 
 var dayNames = []string{"U", "M", "T", "W", "R", "F", "S"}
 
@@ -266,9 +269,7 @@ func server() {
     fmt.Println("Listening on " + os.Getenv("PORT"))
     if err != nil {
       panic(err)
-    }
-    
-    
+    }    
 }
 
 func main() {
