@@ -7,15 +7,7 @@
 
 
 - Each week has a different spreadsheet GID.
-  <s>
-  - 685460203
-  - 1565036888
-  - 1997009880
-  - 586035798
-  - 1931583348
-  - 1449430959
-  </s>
-  - Spreadsheet IDs are now imcrement by one from 1 - 6. 
+  - Spreadsheet IDs increment by one from 1 - 6. 
 
 
 
