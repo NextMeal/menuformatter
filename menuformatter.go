@@ -256,7 +256,7 @@ func updateMenu() {
 }
 
 func broadcastHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Menu Formatter broadcastest")
+	fmt.Fprintf(w, "Menu Formatter broadcast test")
 	fmt.Println("Broadcast requested")
 }
 
