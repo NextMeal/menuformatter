@@ -285,6 +285,7 @@ func uptimeHandler(w http.ResponseWriter, r *http.Request) {
 
 func server() {
 	http.HandleFunc("/broadcast/", broadcastHandler)
+	http.HandleFunc("/menu", menuHandler)
 	http.HandleFunc("/", menuHandler)
 	http.HandleFunc("/about", menuHandler)
 	http.HandleFunc("/uptime", uptimeHandler)
