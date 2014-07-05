@@ -257,6 +257,7 @@ func updateMenu() {
 
 func broadcastHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Menu Formatter broadcast test")
+	fmt.Println("Broadcast requested")
 }
 
 func menuHandler(w http.ResponseWriter, r *http.Request) {
@@ -268,16 +269,18 @@ func menuHandler(w http.ResponseWriter, r *http.Request) {
 
 		counter++
 		//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\nCounter: " , counter)
-		fmt.Println("Counter:", counter)
+		fmt.Println("Menu requested. Counter:", counter)
 	}
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://github.com/ansonl/menuformatter", http.StatusFound)
+	fmt.Println("About requested")
 }
 
 func uptimeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Up since " + startTime.Format("2006-01-02 15:04:05 -0700") + "\nCounter " + strconv.Itoa(counter) + " ")
+	fmt.Println("Uptime requested")
 }
 
 func server() {
