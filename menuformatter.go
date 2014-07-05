@@ -10,6 +10,7 @@ import (
 	"math"
 	"os"
 	"log"
+	"strconv"
 )
 
 type Day struct {
@@ -276,7 +277,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func uptimeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Up since " + startTime.Format("2006-01-02 15:04:05 -0700") + " Counter " + string(counter))
+	fmt.Fprintf(w, "Up since " + startTime.Format("2006-01-02 15:04:05 -0700") + "\nCounter " + strconv.Itoa(counter) + " ")
 }
 
 func server() {
