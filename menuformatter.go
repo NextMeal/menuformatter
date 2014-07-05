@@ -9,6 +9,7 @@ import (
 	"time"
 	"math"
 	"os"
+	"log"
 )
 
 type Day struct {
@@ -35,6 +36,8 @@ var dateLabels = []string{"-14", "-15"}
 var jsonString = "{\"array\":[]}"
 
 var counter = 0
+
+var startTime = time.Now()
 
 func (f *FoodNode) MakeArray() []string {
 	var count = 0
@@ -109,6 +112,12 @@ func (d Day) JSONString() string {
 }
 
 func updateMenu() {
+	defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Error occured when updating menu:", r)
+        }
+    }()
+
 	seconds := time.Now().Unix() / 60 / 60 / 24
 	days := math.Floor(float64(seconds))
 	weekNumber := math.Mod((days + 4 ) / 7, 6) + 3
@@ -245,29 +254,42 @@ func updateMenu() {
 	//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") + " menu updated.")
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func broadcastHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Menu Formatter broadcast test")
+}
 
-	if strings.HasSuffix(r.URL.Path[1:], "about") {
-		fmt.Fprintf(w, "Menu formatter in Go")
-	} else if strings.Contains(r.URL.Path[1:], "favicon") {
+func menuHandler(w http.ResponseWriter, r *http.Request) {
+
+	if strings.Contains(r.URL.Path[1:], "favicon") {
 		fmt.Fprintf(w, "")
 	} else {
 		fmt.Fprintf(w, jsonString)
 
 		counter++
 		//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\nCounter: " , counter)
-		fmt.Println("Counter: ", counter)
+		fmt.Println("Counter:", counter)
 	}
 }
 
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "https://github.com/ansonl/menuformatter", http.StatusFound)
+}
+
+func uptimeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Up since " + startTime.Format("2006-01-02 15:04:05 -0700") + " Counter " + string(counter))
+}
+
 func server() {
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/broadcast/", broadcastHandler)
+	http.HandleFunc("/", menuHandler)
+	http.HandleFunc("/about", menuHandler)
+	http.HandleFunc("/uptime", uptimeHandler)
 	//http.ListenAndServe(":8080", nil)
     
     err := http.ListenAndServe(":"+os.Getenv("PORT"), nil) 
     fmt.Println("Listening on " + os.Getenv("PORT"))
     if err != nil {
-      panic(err)
+      log.Fatal(err)
     }    
 }
 
