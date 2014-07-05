@@ -11,6 +11,7 @@ import (
 	"os"
 	"log"
 	"strconv"
+	"flag"
 )
 
 type Day struct {
@@ -39,6 +40,8 @@ var jsonString = "{\"array\":[]}"
 var counter = 0
 
 var startTime = time.Now()
+
+var broadcast = flag.String("broadcast", "", "broadcast message")
 
 func (f *FoodNode) MakeArray() []string {
 	var count = 0
@@ -256,7 +259,7 @@ func updateMenu() {
 }
 
 func broadcastHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Menu Formatter broadcastest")
+	fmt.Fprintf(w, *broadcast)
 	fmt.Println("Broadcast requested")
 }
 
@@ -300,6 +303,8 @@ func server() {
 
 func main() {
 
+	flag.Parse();
+
 	go server()
 
 	go updateMenu()
@@ -308,6 +313,7 @@ func main() {
 	for now := range t.C {
 		now = now
 		go updateMenu()
+
 		//fmt.Println("Counter ", counter)
 	}
 	
