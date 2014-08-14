@@ -22,7 +22,7 @@
     - Program uptime and requests served.
   - `/broadcast`
     - Any system messages for users to be notified about in plaintext.
-
+    - Broadcasts may be specified in `-broadcast` parameter.
 
 - Listens on port specified in `$PORT` environment variable.
 
