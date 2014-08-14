@@ -1,4 +1,4 @@
-<h1>Google Spreadsheet parser for USNA galley menu</h1>
+<h2>Google Spreadsheet parser for USNA galley menu</h2>
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ansonl/menuformatter)
 
@@ -11,7 +11,9 @@
 - Each week has a different spreadsheet GID.
   - Spreadsheet IDs increment by one from 1 - 6.
 
-
+- Formats into a JSON dictionary of days of the week.
+  - Each day is a dictionary of meals.
+    - Each meal is an array of items.
 
 
 - Listens on port specified in `$PORT` environment variable.
