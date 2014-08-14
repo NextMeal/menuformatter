@@ -15,6 +15,14 @@
   - Each day is a dictionary of meals.
     - Each meal is an array of items.
 
+- Usage
+  - `/menu`
+    - The warez in JSON.
+  - `/uptime`
+    - Program uptime and requests served.
+  - `/broadcast`
+    - Any system messages for users to be notified about in plaintext.
+
 
 - Listens on port specified in `$PORT` environment variable.
 
