@@ -124,7 +124,7 @@ func updateMenu() {
 
 	seconds := time.Now().Unix() / 60 / 60 / 24
 	days := math.Floor(float64(seconds))
-	weekNumber := math.Mod((days + 4 ) / 7, 6) + 3
+	weekNumber := math.Mod((days + 4 ) / 7 + 1, 6) + 3
 	//fmt.Println(days);
 
 	/*
