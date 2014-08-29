@@ -260,7 +260,7 @@ func updateMenu() {
 
 func broadcastHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, *broadcast)
-	fmt.Println("Broadcast requested")
+	//fmt.Println("Broadcast requested")
 }
 
 func menuHandler(w http.ResponseWriter, r *http.Request) {
@@ -272,7 +272,7 @@ func menuHandler(w http.ResponseWriter, r *http.Request) {
 
 		counter++
 		//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\nCounter: " , counter)
-		fmt.Println("Menu requested. Counter:", counter)
+		//fmt.Println("Menu requested. Counter:", counter)
 	}
 }
 
