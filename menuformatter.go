@@ -12,6 +12,7 @@ import (
 	"log"
 	"strconv"
 	"flag"
+	"github.com/yvasiyarov/gorelic"
 )
 
 type Day struct {
@@ -304,6 +305,11 @@ func server() {
 }
 
 func main() {
+
+    agent := gorelic.NewAgent()
+    agent.Verbose = true
+    agent.NewrelicLicense = "ccd00b0cd221267a1b87dabe5e9c564ee87935d8"
+    agent.Run()
 
 	flag.Parse();
 
