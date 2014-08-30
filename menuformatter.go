@@ -38,7 +38,11 @@ var dateLabels = []string{"-14", "-15"}
 
 var jsonString = "{\"array\":[]}"
 
-var counter = 0
+var foregroundCounter = 0
+
+var backgroundCounter = 0
+
+var unknownCounter = 0
 
 var startTime = time.Now()
 
@@ -265,15 +269,30 @@ func broadcastHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func menuHandler(w http.ResponseWriter, r *http.Request) {
-
-	if strings.Contains(r.URL.Path[1:], "favicon") {
+    if strings.Contains(r.URL.Path[1:], "favicon") {
 		fmt.Fprintf(w, "")
+		return
 	} else {
 		fmt.Fprintf(w, jsonString)
-
-		counter++
 		//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\nCounter: " , counter)
-		//fmt.Println("Menu requested. Counter:", counter)
+	}
+    
+    r.ParseForm()
+	
+	appStatus := r.Form["status"]
+	
+	if appStatus != nil && len(appStatus) > 0 && appStatus[0] != "" {
+	    for _, s := range appStatus {
+	        if s == "backgroundFetch" {
+	            backgroundCounter++
+	            break;
+	        } else if s == "foreground" {
+	            foregroundCounter++
+	            break;
+	        }
+	    }  
+	} else { //no status parameter or empty status parameter
+	    unknownCounter++
 	}
 }
 
@@ -285,7 +304,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 func uptimeHandler(w http.ResponseWriter, r *http.Request) {
 	diff := time.Since(startTime)
 
-	fmt.Fprintf(w, "Uptime: " + diff.String() + "\nMenus served: " + strconv.Itoa(counter) + " ")
+	fmt.Fprintf(w, "" + "Uptime:\t" + diff.String() + "\nMenus served [foreground]:\t" + strconv.Itoa(foregroundCounter)+ "\nMenus served [background]:\t" + strconv.Itoa(backgroundCounter)+ "\nMenus served [unknown]:\t" + strconv.Itoa(unknownCounter) + "\n")
 	fmt.Println("Uptime requested")
 }
 
@@ -295,6 +314,7 @@ func server() {
 	http.HandleFunc("/", menuHandler)
 	http.HandleFunc("/about", menuHandler)
 	http.HandleFunc("/uptime", uptimeHandler)
+	
 	//http.ListenAndServe(":8080", nil)
     
     err := http.ListenAndServe(":"+os.Getenv("PORT"), nil) 
