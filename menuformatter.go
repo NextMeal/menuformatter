@@ -263,11 +263,17 @@ func updateMenu() {
 }
 
 func broadcastHandler(w http.ResponseWriter, r *http.Request) {
+    //bypass same origin policy
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	
 	fmt.Fprintf(w, *broadcast)
 	//fmt.Println("Broadcast requested")
 }
 
 func menuHandler(w http.ResponseWriter, r *http.Request) {
+    //bypass same origin policy
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	
     if strings.Contains(r.URL.Path[1:], "favicon") {
 		fmt.Fprintf(w, "")
 		return
@@ -296,11 +302,17 @@ func menuHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
+    //bypass same origin policy
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	
 	http.Redirect(w, r, "https://github.com/ansonl/menuformatter", http.StatusFound)
 	fmt.Println("About requested")
 }
 
 func uptimeHandler(w http.ResponseWriter, r *http.Request) {
+    //bypass same origin policy
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	
 	diff := time.Since(startTime)
 
 	fmt.Fprintf(w, "" + "Uptime:\t" + diff.String() + "\nMenus served [foreground]:\t" + strconv.Itoa(foregroundCounter)+ "\nMenus served [background]:\t" + strconv.Itoa(backgroundCounter)+ "\nMenus served [unknown]:\t" + strconv.Itoa(unknownCounter) + "\n")
