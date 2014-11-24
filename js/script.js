@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('#roundedBox').fadeIn(500);
 
-    var colorArray = ['#FF7519', '#FF0000', '#CC0099', '#009900', '#000080', '#BB8800', '#333333', ''];
+    var colorArray = ['#FF7519', '#FF0000', '#52003D', '#009900', '#000080', '#BB8800', '#333333', ''];
 
     $('body').css('background-color', colorArray[Math.floor(Math.random() * (colorArray.length - 0 + 1) + 0)]);
 
