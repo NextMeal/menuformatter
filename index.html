@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Next Meal</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js"></script>
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row" id="topRow">
+        </div>
+        <div class="row" id="mainRow">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6" id="roundedBox">
+                <div class="row" id="tableTop">
+                    <div class="col-xs-7" id="titleList"><strong>Next Meal</strong> is</div>
+
+                    <div class="col-xs-5" id="titleRefresh">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%" id="refreshProgressBar">
+                                <span id="titleDate">Updating...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="loadingProgress">
+                        <div class="col-sm-12" id="">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Getting Menu
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="jsError">
+                        <div class="col-sm-12" id="">
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="menuList"></div>
+            </div>
+            <div class="col-sm-6" id="errorDiv">
+                <div class="alert alert-danger" role="alert">
+                    <span id="errorBody"></span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%" id="retryProgessBar">
+                            Retrying in 5 seconds
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="retryButton" onclick="ajaxMenu()">Retry now</button>
+                </div>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+    </div>
+</body>
+</html>

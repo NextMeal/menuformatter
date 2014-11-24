@@ -1,0 +1,77 @@
+body {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    background-color: #BB8800;
+    color: #ffffff;
+
+}
+tr {
+
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+   font-weight: 500;
+   font-size: 200%;
+}
+th {
+
+}
+td {
+}
+#titleList {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+   font-weight: 300;
+   font-size: 150%;
+}
+#topRow {
+
+}
+#mainRow {
+}
+#roundedBox {
+    display: none;
+    border-style: solid;
+    border-color: #ffffff;
+    border-radius: 10px;
+    margin: 40px 30px;
+
+}
+#loadingProgress {
+    margin-top:10px;
+}
+#errorDiv {
+    display: none;
+}
+.mealTitleDivider {
+    height: 10px;
+    background-color:#ffffff;
+}
+#tableTop {
+    margin-top:10px;
+}
+#titleList {
+
+}
+#titleDate {
+    font-family: Impact, Charcoal, monospace, sans-serif;
+    font-size:150%;
+    float:right;
+}
+#titleRefresh {
+    display:none;
+}
+#menuList {
+}
+#mealTitle {
+    font-weight: 500;
+    font-size: 250%;
+    border-bottom: 10px solid white;
+}
+#mealTableRow {
+    border: none;
+}
+#errorTitle {
+    font-style: oblique;
+    font-size: 250%;
+    color: #550000;
+}
+#retryButton {
+    width: 100%;
+}
