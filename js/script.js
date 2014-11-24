@@ -30,7 +30,7 @@ function ajaxMenu(type) {
     }
 
     $.ajax({
-        url: "http://navy.herokuapp.com/menu?status=webFetch&appVersion=1.0",
+        url: "https://navy.herokuapp.com/menu?status=webFetch&appVersion=1.0",
         success: function(data, textStatus) {
             $('#loadingProgress').stop().fadeOut(100); //need to stop the fadeIn() if ajax completes quick
             $('#titleRefresh').fadeIn(1000);
