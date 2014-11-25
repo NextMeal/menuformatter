@@ -9,7 +9,7 @@ $(document).ready(function () {
 
     $('body').css('background-color', colorArray[Math.floor(Math.random() * (colorArray.length - 0 + 1) + 0)]);
 	
-	setTimeout(function(){ajaxMenu(null, 60000);}, 0);
+	setTimeout(function(){ajaxMenu(null, 5000);}, 0);
 });
 
 var retryTimeout;
@@ -23,7 +23,7 @@ function ajaxMenu(type, refreshInterval) {
 
     switch (type) {
 		case 1: //normal refresh
-            $("#titleDate").fadeOut(100);
+			$("#titleDate").stop().fadeOut(100, function() {$("#titleRefreshProgress").css('display', 'block');});
             break;
 			
         case 2: //error retry
@@ -48,7 +48,7 @@ function ajaxMenu(type, refreshInterval) {
 			//fade out loading bar
             $('#loadingProgress').stop().fadeOut(100); //need to stop the fadeIn() if ajax completes quick
 			
-			//show title row and menu list row if already shown
+			//show title row and menu list row if not already shown
 			$("#titleList").fadeIn(100);
 			$("#menuList").fadeIn(100);
 						
@@ -56,8 +56,9 @@ function ajaxMenu(type, refreshInterval) {
 			var dateObj = new Date();
             $('#titleDate').html('&#x231A; ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
             //progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), 50, 5/3, 1000);},30000);
-			$("#titleDate").stop().fadeIn(500); //fade in updated date so it fades in on each update
-            $('#titleRefresh').fadeIn(1000).fadeTo(refreshInterval, 0.75);
+			$("#titleRefreshProgress").css('display', 'none');
+			$('#titleRefresh').css('display', 'inline');
+			$("#titleDate").stop().fadeIn(500).delay(refreshInterval * 0.8).fadeTo(refreshInterval * 0.2, 0.75); //fade in updated date so it fades in on each update
             
 			//parse and show menu list
             $('#menuList').html(createMenuCode(getNextThreeMeals(getNextTwoDayMenus(data))));
@@ -70,7 +71,7 @@ function ajaxMenu(type, refreshInterval) {
 			$("#titleList").css('display', 'none');
 			$("#menuList").css('display', 'none');
 			
-			//show error elements
+			//show error elements if not already shown
 			$('#loadingProgress').fadeIn(100); //need to stop the fadeIn() if ajax completes quick
             $('#errorDiv').fadeIn(100);
 			

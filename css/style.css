@@ -60,6 +60,9 @@ td {
 #titleRefresh {
     display:none;
 }
+#titleRefreshProgress {
+	display:none;
+}
 #menuList {
 }
 #mealTitle {
