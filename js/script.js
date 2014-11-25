@@ -1,12 +1,14 @@
 $(document).ready(function () {
 	$("#jsError").css('display', 'none');
+	//$("#forkBanner").fadeOut(5000);
 	
     $('#roundedBox').fadeIn(500);
-
-    var colorArray = ['#FF7519', '#FF0000', '#52003D', '#009900', '#000080', '#BB8800', '#333333', ''];
+	
+	// gray, red, blue, gold, green, purple, orange
+    var colorArray = ['#1C1C1C', '#8E0000', '#000039', '#8F6B00', '#004700', '#470047', '#B84A00', ''];
 
     $('body').css('background-color', colorArray[Math.floor(Math.random() * (colorArray.length - 0 + 1) + 0)]);
-
+	
     setTimeout(ajaxMenu, 0);
 });
 
@@ -49,7 +51,7 @@ function ajaxMenu(type) {
 			
 			//set text and fade in title row
 			var dateObj = new Date();
-            $('#titleDate').html('Updated ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
+            $('#titleDate').html('&#x231A; ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
             //progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), 50, 5/3, 1000);},30000);
 			$("#titleDate").stop().fadeIn(500); //fade in updated date so it fades in on each update
             $('#titleRefresh').fadeIn(1000);

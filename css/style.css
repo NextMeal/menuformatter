@@ -1,6 +1,6 @@
 body {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    background-color: #BB8800;
+    background-color: #1C1C1C;
     color: #ffffff;
 
 }
@@ -33,7 +33,7 @@ td {
 
 }
 #loadingProgress {
-    margin-top:10px;
+    margin-top:20px;
 	margin-left: 10px;
 	margin-right: 10px;
 }
@@ -69,6 +69,9 @@ td {
 }
 #mealTableRow {
     border: none;
+}
+#jsError {
+    font-style: oblique;
 }
 #errorTitle {
     font-style: oblique;
