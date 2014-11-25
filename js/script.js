@@ -9,11 +9,12 @@ $(document).ready(function () {
 
     $('body').css('background-color', colorArray[Math.floor(Math.random() * (colorArray.length - 0 + 1) + 0)]);
 	
-	setTimeout(function(){ajaxMenu(null, 5000);}, 0);
+	setTimeout(function(){ajaxMenu(null, 60000);}, 0);
 });
 
 var retryTimeout;
 var progressTimeout;
+var toggleUpdateProgressBar = false;
 var toggleProgessBar = [null, true]; //flip flops [0] is for danger. [1] is for warning
 
 function ajaxMenu(type, refreshInterval) {
@@ -23,7 +24,8 @@ function ajaxMenu(type, refreshInterval) {
 
     switch (type) {
 		case 1: //normal refresh
-			$("#titleDate").stop().fadeOut(100, function() {$("#titleRefreshProgress").css('display', 'block');});
+			toggleUpdateProgressBar = false;
+			$("#titleDate").stop().fadeOut(100, function() {if(!toggleUpdateProgressBar){$("#titleRefreshProgress").css('display', 'block');}});
             break;
 			
         case 2: //error retry
@@ -57,6 +59,7 @@ function ajaxMenu(type, refreshInterval) {
             $('#titleDate').html('&#x231A; ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
             //progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), 50, 5/3, 1000);},30000);
 			$("#titleRefreshProgress").css('display', 'none');
+			toggleUpdateProgressBar = true;
 			$('#titleRefresh').css('display', 'inline');
 			$("#titleDate").stop().fadeIn(500).delay(refreshInterval * 0.8).fadeTo(refreshInterval * 0.2, 0.75); //fade in updated date so it fades in on each update
             
