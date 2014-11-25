@@ -57,7 +57,7 @@ function ajaxMenu(type, refreshInterval) {
             $('#titleDate').html('&#x231A; ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
             //progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), 50, 5/3, 1000);},30000);
 			$("#titleDate").stop().fadeIn(500); //fade in updated date so it fades in on each update
-            $('#titleRefresh').fadeIn(1000).fadeOut(refreshInterval);
+            $('#titleRefresh').fadeIn(1000).fadeTo(refreshInterval, 0.75);
             
 			//parse and show menu list
             $('#menuList').html(createMenuCode(getNextThreeMeals(getNextTwoDayMenus(data))));
