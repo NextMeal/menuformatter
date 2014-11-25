@@ -9,14 +9,14 @@ $(document).ready(function () {
 
     $('body').css('background-color', colorArray[Math.floor(Math.random() * (colorArray.length - 0 + 1) + 0)]);
 	
-    setTimeout(ajaxMenu, 0);
+	setTimeout(function(){ajaxMenu(null, 60000);}, 0);
 });
 
 var retryTimeout;
 var progressTimeout;
 var toggleProgessBar = [null, true]; //flip flops [0] is for danger. [1] is for warning
 
-function ajaxMenu(type) {
+function ajaxMenu(type, refreshInterval) {
 	//clear timeouts
     clearTimeout(retryTimeout);
     clearTimeout(progressTimeout);
@@ -45,21 +45,24 @@ function ajaxMenu(type) {
         success: function(data, textStatus) {
 			//hide error section if shown
 			$("#errorDiv").css('display', 'none');
-			
 			//fade out loading bar
             $('#loadingProgress').stop().fadeOut(100); //need to stop the fadeIn() if ajax completes quick
 			
+			//show title row and menu list row if already shown
+			$("#titleList").fadeIn(100);
+			$("#menuList").fadeIn(100);
+						
 			//set text and fade in title row
 			var dateObj = new Date();
             $('#titleDate').html('&#x231A; ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
             //progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), 50, 5/3, 1000);},30000);
 			$("#titleDate").stop().fadeIn(500); //fade in updated date so it fades in on each update
-            $('#titleRefresh').fadeIn(1000);
+            $('#titleRefresh').fadeIn(1000).fadeOut(refreshInterval);
             
 			//parse and show menu list
             $('#menuList').html(createMenuCode(getNextThreeMeals(getNextTwoDayMenus(data))));
-            
-			retryTimeout = setTimeout(function(){ajaxMenu(1);},60000);
+
+			retryTimeout = setTimeout(function(){ajaxMenu(1, refreshInterval);},refreshInterval);
         },
 		//on ajax request error
         error: function(date, textStatus, errorThrown) {
@@ -67,23 +70,24 @@ function ajaxMenu(type) {
 			$("#titleList").css('display', 'none');
 			$("#menuList").css('display', 'none');
 			
-            $('#errorDiv').fadeIn(500);
+			//show error elements
+			$('#loadingProgress').fadeIn(100); //need to stop the fadeIn() if ajax completes quick
+            $('#errorDiv').fadeIn(100);
 			
 			//set error body message
             $('#errorBody').html('<div><p id="errorTitle">Menu backend is unreachable!</p><p>We\'ll be right back.</p>Browser provided following message<blockquote><p>' + textStatus + ' - ' + errorThrown + '</p></blockquote></div>');
             
 			//set loading progress bar
-			$("#loadingProgressBody").html("Retrying in 10 seconds");
+			$("#loadingProgressBody").html("Retrying in 60 seconds");
 			$("#loadingProgressBody").toggleClass( 'progress-bar-danger', toggleProgessBar[0]);
 			$("#loadingProgressBody").toggleClass( 'progress-bar-warning', toggleProgessBar[1]);
 			
 			//reenable retry button
             $("#retryButton").removeAttr("disabled");
             $("#retryButton").html('Retry Now');
-			console.log('head');
 			
 			//get set timeout to retry
-			retryTimeout = setTimeout(function(){ajaxMenu(2);}, 10000);
+			retryTimeout = setTimeout(function(){ajaxMenu(2, refreshInterval);}, refreshInterval);
         }
     });
 }
@@ -122,8 +126,8 @@ function createMenuCode(ntm) {
     code += '';
 
     for (var i = 0; i < ntm[0].length; i++) {
-        if (ntm[0][i]['title'] !== '') {
-            code += '<tr><td id="mealTableRow">' + ntm[0][i]['title'] + '</td></tr>';
+        if (ntm[0][i].title !== '') {
+            code += '<tr><td id="mealTableRow">' + ntm[0][i].title + '</td></tr>';
         }
     }
     code += '</table>';
@@ -170,10 +174,10 @@ function getNextThreeMeals(twoDays) {
     nearestMealIndex = mealIndex;
 
     var nextThreeMeals = [];
-    console.log(twoDays);
+    //console.log(twoDays);
     for (var i = 0; i < 3; i++) {
-        console.log(dayIndex + '|' + mealIndex);
-        console.log(twoDays[dayIndex][mealAbbrArr[mealIndex]]);
+        //console.log(dayIndex + '|' + mealIndex);
+        //console.log(twoDays[dayIndex][mealAbbrArr[mealIndex]]);
         nextThreeMeals.push(twoDays[dayIndex][mealAbbrArr[mealIndex]]);
         if (mealIndex == 2) {
             dayIndex++;
@@ -198,7 +202,7 @@ function getNextTwoDayMenus(data) {
 
     for (var i = 0; i < 2; i++) {
         dateAbbr = dateArray[weekdayIndex];
-        console.log(dateAbbr);
+        //console.log(dateAbbr);
         twoDayMenus.push(weekMenu[dateAbbr]);
 
 
