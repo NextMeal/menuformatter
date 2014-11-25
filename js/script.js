@@ -1,4 +1,6 @@
 $(document).ready(function () {
+	$("#jsError").css('display', 'none');
+	
     $('#roundedBox').fadeIn(500);
 
     var colorArray = ['#FF7519', '#FF0000', '#52003D', '#009900', '#000080', '#BB8800', '#333333', ''];
@@ -10,50 +12,76 @@ $(document).ready(function () {
 
 var retryTimeout;
 var progressTimeout;
+var toggleProgessBar = [null, true]; //flip flops [0] is for danger. [1] is for warning
 
 function ajaxMenu(type) {
+	//clear timeouts
     clearTimeout(retryTimeout);
     clearTimeout(progressTimeout);
 
     switch (type) {
-        case 1: //error retry
-            $("#retryProgessBar").html("");
-            $("#retryProgessBar").css("width", "50%");
+		case 1: //normal refresh
+            $("#titleDate").fadeOut(100);
+            break;
+			
+        case 2: //error retry
+			//update loading progressbar
+			$("#loadingProgressBody").html("Retrying");
+			$("#loadingProgressBody").toggleClass( 'progress-bar-danger', toggleProgessBar[0]);
+			$("#loadingProgressBody").toggleClass( 'progress-bar-warning', toggleProgessBar[1]);
+			
+            //disable and update retryButton
             $("#retryButton").attr("disabled", "disabled");
             $("#retryButton").html('Retrying');
             break;
 
-        case 2: //normal refresh
-            $("#titleDate").fadeOut(100);
-            $("#refreshProgressBar").css('width', '100%');
-            break;
     }
 
     $.ajax({
         url: "https://navy.herokuapp.com/menu?status=webFetch&appVersion=1.0",
+		//on ajax request success
         success: function(data, textStatus) {
+			//hide error section if shown
+			$("#errorDiv").css('display', 'none');
+			
+			//fade out loading bar
             $('#loadingProgress').stop().fadeOut(100); //need to stop the fadeIn() if ajax completes quick
+			
+			//set text and fade in title row
+			var dateObj = new Date();
+            $('#titleDate').html('Updated ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
+            //progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), 50, 5/3, 1000);},30000);
+			$("#titleDate").stop().fadeIn(500); //fade in updated date so it fades in on each update
             $('#titleRefresh').fadeIn(1000);
-            var dateObj = new Date();
-            $('#titleDate').html('Updated ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;&nbsp;');
-            progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), 50, 5/3, 1000)}, 30000);
-            console.log(textStatus);
+            
+			//parse and show menu list
             $('#menuList').html(createMenuCode(getNextThreeMeals(getNextTwoDayMenus(data))));
-            $("#titleDate").stop().fadeIn(500);
-
-
-            retryTimeout = setTimeout(function(){ajaxMenu(2)}, 60000);
+            
+			retryTimeout = setTimeout(function(){ajaxMenu(1);},60000);
         },
+		//on ajax request error
         error: function(date, textStatus, errorThrown) {
-            $('#loadingProgress').stop().fadeOut(100);
-            $('#errorDiv').fadeIn(1000);
-            console.log(textStatus);
-            $("#retryProgessBar").html("Retrying in 10 seconds");
-            $('#errorBody').html('<div><p id="errorTitle">Menu backend is unreachable!</p> Browser provided following message<blockquote><p>' + textStatus + ' - ' + errorThrown + '</p></blockquote></div>');
-            $("#retryProgessBar").css("width", "100%");
+			//hide title row and menu list row if already shown
+			$("#titleList").css('display', 'none');
+			$("#menuList").css('display', 'none');
+			
+            $('#errorDiv').fadeIn(500);
+			
+			//set error body message
+            $('#errorBody').html('<div><p id="errorTitle">Menu backend is unreachable!</p><p>We\'ll be right back.</p>Browser provided following message<blockquote><p>' + textStatus + ' - ' + errorThrown + '</p></blockquote></div>');
+            
+			//set loading progress bar
+			$("#loadingProgressBody").html("Retrying in 10 seconds");
+			$("#loadingProgressBody").toggleClass( 'progress-bar-danger', toggleProgessBar[0]);
+			$("#loadingProgressBody").toggleClass( 'progress-bar-warning', toggleProgessBar[1]);
+			
+			//reenable retry button
             $("#retryButton").removeAttr("disabled");
             $("#retryButton").html('Retry Now');
-            retryTimeout = setTimeout(ajaxMenu(1), 10000);
+			console.log('head');
+			
+			//get set timeout to retry
+			retryTimeout = setTimeout(function(){ajaxMenu(2);}, 10000);
         }
     });
 }
@@ -61,21 +89,23 @@ function ajaxMenu(type) {
 function increment(progressBar, percent, inc, period) {
     progressBar.css('width', '' + percent + '%');
     if (percent < 101)
-        progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), percent + inc, inc,  period)}, period);
+        progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), percent + inc, inc,  period);}, period);
 }
 
 function formatDate(dateObj) {
-    var output = dateObj.getHours() + ':'
+    var output = dateObj.getHours() + ':';
     if (dateObj.getMinutes() < 10) {
         output += '0' + dateObj.getMinutes();
     } else {
         output += dateObj.getMinutes();
     }
+	/*
     if (dateObj.getSeconds() < 10) {
         output += ':0' + dateObj.getSeconds();
     } else {
         output += ':' + dateObj.getSeconds();
     }
+	*/
     return output;
 }
 
@@ -90,8 +120,8 @@ function createMenuCode(ntm) {
     code += '';
 
     for (var i = 0; i < ntm[0].length; i++) {
-        if (ntm[0][i]['title'] != '') {
-            code += '<tr><td id="mealTableRow">' + ntm[0][i]['title'] + '</td></tr>'
+        if (ntm[0][i]['title'] !== '') {
+            code += '<tr><td id="mealTableRow">' + ntm[0][i]['title'] + '</td></tr>';
         }
     }
     code += '</table>';

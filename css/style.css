@@ -26,7 +26,6 @@ td {
 #mainRow {
 }
 #roundedBox {
-    display: none;
     border-style: solid;
     border-color: #ffffff;
     border-radius: 10px;
@@ -35,6 +34,8 @@ td {
 }
 #loadingProgress {
     margin-top:10px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 #errorDiv {
     display: none;
@@ -50,9 +51,11 @@ td {
 
 }
 #titleDate {
-    font-family: Impact, Charcoal, monospace, sans-serif;
+    font: "Lucida Console", Monaco, monospace;
     font-size:150%;
-    float:right;
+	float: right;
+    text-align: right;
+	overflow:auto;
 }
 #titleRefresh {
     display:none;
@@ -70,8 +73,7 @@ td {
 #errorTitle {
     font-style: oblique;
     font-size: 250%;
-    color: #550000;
 }
 #retryButton {
-    width: 100%;
+	margin-bottom:10px;
 }
