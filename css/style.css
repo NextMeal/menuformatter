@@ -83,3 +83,10 @@ td {
 #retryButton {
 	margin-bottom:10px;
 }
+
+#updateSymbol { 
+	animation: opacityPulse 3s infinite; 
+	-moz-animation: opacityPulse 3s infinite; 
+	-webkit-animation: opacityPulse 3s infinite; 
+}
+@-webkit-keyframes opacityPulse { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }

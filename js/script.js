@@ -16,6 +16,7 @@ var retryTimeout;
 var progressTimeout;
 var toggleUpdateProgressBar = false;
 var toggleProgessBar = [null, true]; //flip flops [0] is for danger. [1] is for warning
+var countdownTimeout;
 
 function ajaxMenu(type, refreshInterval) {
 	//clear timeouts
@@ -56,10 +57,10 @@ function ajaxMenu(type, refreshInterval) {
 						
 			//set text and fade in title row
 			var dateObj = new Date();
-            $('#titleDate').html('&#x231A; ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
+            $('#titleDate').html('<span id="updateSymbol">&#x231A;</span> ' + getFullWeekdayFromIndex(dateObj.getDay()) + ' ' + formatDate(dateObj) + '&nbsp;');
             //progressTimeout = setTimeout(function(){increment($('#refreshProgressBar'), 50, 5/3, 1000);},30000);
 			$("#titleRefreshProgress").css('display', 'none');
-			toggleUpdateProgressBar = true;
+			toggleUpdateProgressBar = true; //signal to not show update progress bar since update > animation speed
 			$('#titleRefresh').css('display', 'inline');
 			$("#titleDate").stop().fadeIn(500).delay(refreshInterval * 0.8).fadeTo(refreshInterval * 0.2, 0.75); //fade in updated date so it fades in on each update
             
@@ -82,7 +83,11 @@ function ajaxMenu(type, refreshInterval) {
             $('#errorBody').html('<div><p id="errorTitle">Menu backend is unreachable!</p><p>We\'ll be right back.</p>Browser provided following message<blockquote><p>' + textStatus + ' - ' + errorThrown + '</p></blockquote></div>');
             
 			//set loading progress bar
-			$("#loadingProgressBody").html("Retrying in 60 seconds");
+			toggleUpdateProgressBar = true; //signal to not show update progress bar since update > animation speed
+			$("#loadingProgressBody").html('Retrying in <span id="retryCountdown">60</span>s');
+			//clear previous countdown timeouts and start countdown from 60
+			clearTimeout(countdownTimeout);
+			countdown($('#retryCountdown'), 60, 1000);
 			$("#loadingProgressBody").toggleClass( 'progress-bar-danger', toggleProgessBar[0]);
 			$("#loadingProgressBody").toggleClass( 'progress-bar-warning', toggleProgessBar[1]);
 			
@@ -94,6 +99,12 @@ function ajaxMenu(type, refreshInterval) {
 			retryTimeout = setTimeout(function(){ajaxMenu(2, refreshInterval);}, refreshInterval);
         }
     });
+}
+
+function countdown(element, number, period) {
+	element.html(number);
+	if (number > 0)
+		countdownTimeout = setTimeout(function(){countdown(element, number - 1, period);}, period);
 }
 
 function increment(progressBar, percent, inc, period) {
