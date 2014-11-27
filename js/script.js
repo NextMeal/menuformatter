@@ -72,7 +72,7 @@ function ajaxMenu(type, refreshInterval) {
 		//on ajax request error
         error: function(date, textStatus, errorThrown) {
 			//hide title row and menu list row if already shown
-			$("#titleList").css('display', 'none');
+			$("#tableTop").css('display', 'none');
 			$("#menuList").css('display', 'none');
 			
 			//show error elements if not already shown
