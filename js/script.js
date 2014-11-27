@@ -52,7 +52,7 @@ function ajaxMenu(type, refreshInterval) {
             $('#loadingProgress').stop().fadeOut(100); //need to stop the fadeIn() if ajax completes quick
 			
 			//show title row and menu list row if not already shown
-			$("#titleList").fadeIn(100);
+			$("#tableTop").fadeIn(100);
 			$("#menuList").fadeIn(100);
 						
 			//set text and fade in title row
