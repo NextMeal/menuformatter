@@ -1,0 +1,92 @@
+body {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    background-color: #1C1C1C;
+    color: #ffffff;
+
+}
+tr {
+
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+   font-weight: 500;
+   font-size: 200%;
+}
+th {
+
+}
+td {
+}
+#titleList {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+   font-weight: 300;
+   font-size: 150%;
+}
+#topRow {
+
+}
+#mainRow {
+}
+#roundedBox {
+    border-style: solid;
+    border-color: #ffffff;
+    border-radius: 10px;
+    margin: 40px 30px;
+
+}
+#loadingProgress {
+    margin-top:20px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+#errorDiv {
+    display: none;
+}
+.mealTitleDivider {
+    height: 10px;
+    background-color:#ffffff;
+}
+#tableTop {
+    margin-top:10px;
+}
+#titleList {
+
+}
+#titleDate {
+    font: "Lucida Console", Monaco, monospace;
+    font-size:150%;
+	float: right;
+    text-align: right;
+	overflow:auto;
+}
+#titleRefresh {
+    display:none;
+}
+#titleRefreshProgress {
+	display:none;
+}
+#menuList {
+}
+#mealTitle {
+    font-weight: 500;
+    font-size: 250%;
+    border-bottom: 10px solid white;
+}
+#mealTableRow {
+    border: none;
+}
+#jsError {
+    font-style: oblique;
+}
+#errorTitle {
+    font-style: oblique;
+    font-size: 250%;
+}
+#retryButton {
+	margin-bottom:10px;
+}
+
+#updateSymbol { 
+	animation: opacityPulse 3s infinite; 
+	-moz-animation: opacityPulse 3s infinite; 
+	-webkit-animation: opacityPulse 3s infinite; 
+}
+@-webkit-keyframes opacityPulse { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }

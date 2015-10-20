@@ -1,5 +1,15 @@
-<h2>Google Spreadsheet parser for USNA galley menu</h2>
+USNA King Hall galley Google Spreadsheet menu parser for Next Meal
+======
 
+Getting the Next Meal app 
+------
+ - [Next Meal iOS app](https://itunes.apple.com/us/app/next-meal-app/id779302741?mt=8)
+ - [Next Meal Android app](https://play.google.com/store/apps/details?id=com.pepinonline.nextmeal)
+ - [Next Meal Pebble app](http://apps.getpebble.com/en_US/application/54ffb9650bde9a0d850000ac)
+ - [Next Meal web app @ www.NextMeal.tk](http://nextmeal.tk)
+
+Using the Next Meal API
+------
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ansonl/menuformatter)
 
 - Galley menu located [here](https://docs.google.com/a/usna.edu/spreadsheets/d/117RRZoomI9peIgAEQmvMPjo6dPvAEcbP7qyoLprwEJc/).
@@ -15,14 +25,18 @@
   - Each day is a dictionary of meals.
     - Each meal is an array of items.
 
-- Usage
+Usage
+------
   - `/menu`
-    - The warez in JSON.
+	    - The current week's menu in JSON.
+  - `/menu2`
+	    - The next week's menu in JSON.
   - `/uptime`
-    - Program uptime and requests served.
+	    - Program uptime and requests served.
   - `/broadcast`
-    - Any system messages for users to be notified about in plaintext.
-    - Broadcasts may be specified in `-broadcast` parameter.
+	    - Any system messages for users to be notified about in plaintext.
+	    - Broadcasts may be specified in `-broadcast` command argument .
+
 
 - Listens on port specified in `$PORT` environment variable.
 

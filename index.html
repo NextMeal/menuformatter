@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-itunes-app" content="app-id=779302741, app-argument=tkwebapp">
+		<title>Next Meal</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="css/style.css">
+		<script src="js/script.js"></script>
+		<meta name="apple-itunes-app" content="app-id=779302741, affiliate-data=11l9HF, app-argument=tkwebapp">
+	</head>
+	<body>
+		<!--
+		<p id='forkBanner'>
+			<a href="https://github.com/ansonl/menuformatter"><img style="position: absolute; top: 0; right: 0; border: 0; float: right;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+		</p>
+		-->
+		<div class="container-fluid">
+			<div class="row" id="topRow"></div>
+			<div class="row" id="mainRow">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-6" id="roundedBox">
+					<div class="row" id="tableTop">
+						<div class="col-xs-7" id="titleList"><strong>Next Meal</strong> is</div>
+						<div class="col-xs-5" id="titleRefresh">
+							<span id="titleDate">Updating...</span>
+							<div class="progress" id="titleRefreshProgress">
+									<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" id="updateProgressBody" style="width: 100%"></div>
+							</div>
+						</div>
+					</div>
+						<div class="col-sm-12" id="loadingProgress">
+							<div class="col-sm-12">
+								<div class="progress">
+									<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" id="loadingProgressBody" style="width: 100%">Getting Menu</div>
+								</div>
+							</div>
+						</div>
+					<div class="row" id="jsError">
+						<div class="col-sm-12">
+							<p>
+								JavaScript is not enabled. Turn on JavaScript and <a href=".">reload</a> the page to get the menu.
+							</p>
+						</div>
+					</div>
+					<div id="errorDiv">
+						<span id="errorBody"></span>
+						<button type="button" class="btn btn-primary" id="retryButton" onclick="ajaxMenu(2, 60000);">Retry now</button>
+					</div>
+					<div id="menuList"></div>
+				</div>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+	</body>
+</html>

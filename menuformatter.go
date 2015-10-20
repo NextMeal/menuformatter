@@ -36,10 +36,13 @@ var mealLabels = []string{"BREAKFAST", "LUNCH", "DINNER"}
 var dateLabels = []string{"-14", "-15"}
 
 var jsonString = "{\"array\":[]}"
+var jsonString2 = "{\"array\":[]}" //next weeks menu
 
 var foregroundCounter = 0
 
 var backgroundCounter = 0
+
+var androidCounter = 0
 
 var unknownCounter = 0
 
@@ -119,30 +122,29 @@ func (d Day) JSONString() string {
 	return breakfast + "," + lunch + "," + dinner
 }
 
-func updateMenu() {
-	defer func() {
-        if r := recover(); r != nil {
-            fmt.Println("Error occured when updating menu:", r)
-        }
-    }()
-
-	seconds := time.Now().Unix() / 60 / 60 / 24
+//For current week, offset is 0, next week offset is 1
+func getSpreadsheetData(offset int64) *http.Response {
+    seconds := time.Now().Unix() / 60 / 60 / 24
 	days := math.Floor(float64(seconds))
-	weekNumber := math.Mod((days + 4 ) / 7 + 1, 6) + 3
+	weekNumber := math.Mod((days + 4 ) / 7 + 1 + float64(offset), 6) + 3
 	//fmt.Println(days);
 
 	/*
 	// read local file
 	b, err := ioutil.ReadFile("week1.json")
 	*/
-
-	//must minus one because index of week n menu is actually n -1 since array starts at 0 instead of 1
-	resp, err := http.Get("https://spreadsheets.google.com/feeds/list/117RRZoomI9peIgAEQmvMPjo6dPvAEcbP7qyoLprwEJc/" + spreadsheetIds[int64(weekNumber) % 6] + "/public/values?hl=en_US&alt=json")
+    
+    //must minus one because index of week n menu is actually n -1 since array starts at 0 instead of 1
+    resp, err := http.Get("https://spreadsheets.google.com/feeds/list/117RRZoomI9peIgAEQmvMPjo6dPvAEcbP7qyoLprwEJc/" + spreadsheetIds[int64(weekNumber) % 6] + "/public/values?hl=en_US&alt=json")
 	if err != nil {
 		panic(err)
 	}
+	
+	return resp
+}
 
-	defer resp.Body.Close()
+func parseSpreadsheetData(resp *http.Response) string {
+    defer resp.Body.Close()
 	b, err := ioutil.ReadAll(resp.Body)
 
 	var f interface{}
@@ -243,21 +245,39 @@ func updateMenu() {
 
 
 	//create json formatted string for week menu
-	jsonString = "{"
+	outputString := "{"
 
 	for i := range dayNames {
-		jsonString += `"` + dayNames[i] + `"` + ":" + "{"
+		outputString += `"` + dayNames[i] + `"` + ":" + "{"
 
-		jsonString += week[i].JSONString()
+		outputString += week[i].JSONString()
 
-		jsonString += "}"
+		outputString += "}"
 
 		if i < len(dayNames)-1 {
-			jsonString += ","
+			outputString += ","
 		}
 	}
 
-	jsonString += "}"
+	outputString += "}"
+	
+	return outputString
+}
+
+func updateMenu() {
+	defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Error occured when updating menu:", r, " Recovering...")
+        }
+    }()
+
+    //update current week's menu
+	resp := getSpreadsheetData(0)
+	jsonString = parseSpreadsheetData(resp)
+	
+	//update next week's menu
+	resp = getSpreadsheetData(1)
+	jsonString2 = parseSpreadsheetData(resp)
 
 	//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") + " menu updated.")
 }
@@ -294,10 +314,26 @@ func menuHandler(w http.ResponseWriter, r *http.Request) {
 	        } else if s == "foreground" {
 	            foregroundCounter++
 	            break;
+	        } else if s == "android" {
+	            androidCounter++
+	            break;
 	        }
 	    }  
 	} else { //no status parameter or empty status parameter
 	    unknownCounter++
+	}
+}
+
+func menuHandler2(w http.ResponseWriter, r *http.Request) {
+    //bypass same origin policy
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	
+    if strings.Contains(r.URL.Path[1:], "favicon") {
+		fmt.Fprintf(w, "")
+		return
+	} else {
+		fmt.Fprintf(w, jsonString2)
+		//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\nCounter: " , counter)
 	}
 }
 
@@ -315,13 +351,14 @@ func uptimeHandler(w http.ResponseWriter, r *http.Request) {
 	
 	diff := time.Since(startTime)
 
-	fmt.Fprintf(w, "" + "Uptime:\t" + diff.String() + "\nMenus served [foreground]:\t" + strconv.Itoa(foregroundCounter)+ "\nMenus served [background]:\t" + strconv.Itoa(backgroundCounter)+ "\nMenus served [unknown]:\t" + strconv.Itoa(unknownCounter) + "\n")
+	fmt.Fprintf(w, "" + "Uptime:\t" + diff.String() + "\nMenus served [foreground]:\t" + strconv.Itoa(foregroundCounter)+ "\nMenus served [background]:\t" + strconv.Itoa(backgroundCounter) +  "\nMenus served [android]:\t" + strconv.Itoa(androidCounter) + "\nMenus served [unknown]:\t" + strconv.Itoa(unknownCounter) + "\n")
 	fmt.Println("Uptime requested")
 }
 
 func server() {
 	http.HandleFunc("/broadcast/", broadcastHandler)
 	http.HandleFunc("/menu", menuHandler)
+	http.HandleFunc("/menu2", menuHandler2)
 	http.HandleFunc("/", menuHandler)
 	http.HandleFunc("/about", menuHandler)
 	http.HandleFunc("/uptime", uptimeHandler)
