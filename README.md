@@ -6,7 +6,7 @@ Getting the Next Meal app
  - [Next Meal iOS app](https://itunes.apple.com/us/app/next-meal-app/id779302741?mt=8)
  - [Next Meal Android app](https://play.google.com/store/apps/details?id=com.pepinonline.nextmeal)
  - [Next Meal Pebble app](http://apps.getpebble.com/en_US/application/54ffb9650bde9a0d850000ac)
- - [Next Meal web app @ www.NextMeal.tk](http://nextmeal.tk)
+ - [Next Meal web app](http://nextmeal.github.io/menuformatter/)
 
 Using the Next Meal API
 ------
