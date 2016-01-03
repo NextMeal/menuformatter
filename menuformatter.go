@@ -139,6 +139,9 @@ func getSpreadsheetData(offset int64) *http.Response {
 	if err != nil {
 		panic(err)
 	}
+
+	//Get JSON feed URL
+	//fmt.Println("https://spreadsheets.google.com/feeds/list/117RRZoomI9peIgAEQmvMPjo6dPvAEcbP7qyoLprwEJc/" + spreadsheetIds[int64(weekNumber) % 6] + "/public/values?hl=en_US&alt=json")
 	
 	return resp
 }
@@ -170,6 +173,16 @@ func parseSpreadsheetData(resp *http.Response) string {
 		entry := (entries[v].(map[string]interface{}))
 
 		title := (entry["title"]).(map[string]interface{})
+
+		//Programmatically generate dateLabel suffix based on current year
+		//http://play.golang.org/p/g4sXtpgKm1
+		dateLabels = make([]string, 0, 3)
+		year, _, _ := time.Now().Date()
+		year -= int(year / 1000) * 1000
+		for i := -1; i <= 1; i++ {
+			dateLabels = append(dateLabels, fmt.Sprintf("-%v", strconv.Itoa(year + i)))
+		}
+		fmt.Println(dateLabels)
 
 		//check if the line is a date label like 14-MAY-14
 		isDateLabel := false
@@ -277,6 +290,7 @@ func updateMenu() {
 	
 	//update next week's menu
 	resp = getSpreadsheetData(1)
+
 	jsonString2 = parseSpreadsheetData(resp)
 
 	//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") + " menu updated.")
