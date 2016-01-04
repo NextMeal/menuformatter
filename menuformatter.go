@@ -182,7 +182,9 @@ func parseSpreadsheetData(resp *http.Response) string {
 		for i := -1; i <= 1; i++ {
 			dateLabels = append(dateLabels, fmt.Sprintf("-%v", strconv.Itoa(year + i)))
 		}
-		fmt.Println(dateLabels)
+		
+		//print year suffixes to look for
+		//fmt.Println(dateLabels)
 
 		//check if the line is a date label like 14-MAY-14
 		isDateLabel := false
