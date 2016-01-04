@@ -1,5 +1,5 @@
 {
-	"ImportPath": ".",
+	"ImportPath": "github.com/ansonl/menuformatter",
 	"GoVersion": "go1.5",
 	"Packages": [
 		"./..."
