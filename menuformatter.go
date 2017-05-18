@@ -12,6 +12,8 @@ import (
 	"log"
 	"strconv"
 	"flag"
+	"github.com/garyburd/redigo/redis"
+	"sync"
 )
 
 type Day struct {
@@ -49,6 +51,11 @@ var unknownCounter = 0
 var startTime = time.Now()
 
 var broadcast = flag.String("broadcast", "", "broadcast message")
+
+//Redis variables
+var redisPool *redis.Pool
+var maxConnections = 10
+var maxIdleConnections = 2
 
 func (f *FoodNode) MakeArray() []string {
 	var count = 0
@@ -309,7 +316,13 @@ func broadcastHandler(w http.ResponseWriter, r *http.Request) {
 func menuHandler(w http.ResponseWriter, r *http.Request) {
     //bypass same origin policy
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	
+
+	/*
+	 * Remember to read the request body before writing to the responsewriter
+	 * https://groups.google.com/d/msg/golang-nuts/fv94aZWK3Go/CoAYMMosRtUJ
+	 */
+	r.ParseForm()
+
     if strings.Contains(r.URL.Path[1:], "favicon") {
 		fmt.Fprintf(w, "")
 		return
@@ -317,12 +330,10 @@ func menuHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, jsonString)
 		//fmt.Println(time.Now().Format("2006-01-02 15:04:05 -0700") , " loaded path " , r.URL.Path[1:] , "\nCounter: " , counter)
 	}
-    
-    r.ParseForm()
 	
 	appStatus := r.Form["status"]
 	
-	if appStatus != nil && len(appStatus) > 0 && appStatus[0] != "" {
+	if len(appStatus) > 0 && appStatus[0] != "" {
 	    for _, s := range appStatus {
 	        if s == "backgroundFetch" {
 	            backgroundCounter++
@@ -338,6 +349,13 @@ func menuHandler(w http.ResponseWriter, r *http.Request) {
 	} else { //no status parameter or empty status parameter
 	    unknownCounter++
 	}
+
+	//Update leaderboard for P2P
+	go func() {
+		if err := updateLeaderboardWithForm(r.PostForm); err != nil {
+			log.Println(err)
+		}
+	}()
 }
 
 func menuHandler2(w http.ResponseWriter, r *http.Request) {
@@ -353,7 +371,7 @@ func menuHandler2(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func aboutHandler(w http.ResponseWriter, r *http.Request) {
+func rootHandler(w http.ResponseWriter, r *http.Request) {
     //bypass same origin policy
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	
@@ -372,12 +390,12 @@ func uptimeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func server() {
-	http.HandleFunc("/broadcast/", broadcastHandler)
+	http.HandleFunc("/broadcast", broadcastHandler)
 	http.HandleFunc("/menu", menuHandler)
 	http.HandleFunc("/menu2", menuHandler2)
-	http.HandleFunc("/", menuHandler)
-	http.HandleFunc("/about", menuHandler)
+	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/uptime", uptimeHandler)
+	http.HandleFunc("/leaderboard", leaderboardHandler)
 	
 	//http.ListenAndServe(":8080", nil)
     
@@ -388,22 +406,34 @@ func server() {
     }    
 }
 
+func refreshMenuLoop(wg *sync.WaitGroup) {
+	ticker := time.NewTicker(30 * time.Second)
+
+	for {
+		select {
+		case <-ticker.C:
+			go updateMenu()
+			fmt.Println("refreshed")
+		}
+	}
+
+}
+
 func main() {
 
 	flag.Parse();
 
+	//Setup redis connection pool
+	redisPool = createRedisPool()
+
 	go server()
 
 	go updateMenu()
-	t := time.NewTicker(30 * time.Second)
 
-	for now := range t.C {
-		now = now
-		go updateMenu()
-
-		//fmt.Println("Counter ", counter)
-	}
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go refreshMenuLoop(&wg)
+	wg.Wait()
 	
-	fmt.Println("server end")
-
+	redisPool.Close()
 }
