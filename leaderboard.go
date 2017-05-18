@@ -83,12 +83,9 @@ func createLeaderboardResponse() string {
 
 	if goodRatioSortedSet, err = redis.Strings(c.Do("ZREVRANGE", goodRatioKey, 0, -1)); err != nil { return generateStatusResponse(-1, err.Error()) }
 
-	log.Println(goodRatioSortedSet)
-
 	//Get device name from sorted device ID array
 	c.Send("MULTI")
 	for _, deviceId := range goodRatioSortedSet {
-		log.Println(strings.Join([]string{deviceIdKey, deviceId}, ":"))
 		c.Send("HGET", strings.Join([]string{deviceIdKey, deviceId}, ":"), deviceNameKey)
 	}
 
@@ -115,9 +112,7 @@ func createLeaderboardResponse() string {
 
 	sortedNameAndScoreArray = make([]map[string]interface{}, 0, len(goodRatioSortedSet))
 	for index, _ := range goodRatioSortedSet {
-		log.Println(sortedNameAndScoreArray)
 		deviceNameAndScoreMap := map[string]interface{}{"deviceName" : deviceNameArray[index], "deviceGoodRatio" : deviceScoreArray[index]}
-		log.Println(deviceNameAndScoreMap)
 		sortedNameAndScoreArray = append(sortedNameAndScoreArray, deviceNameAndScoreMap)
 	}
 
@@ -129,7 +124,6 @@ func leaderboardHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	fmt.Fprintf(w, createLeaderboardResponse())
-	fmt.Println("Leaderboard requested")
 }
 
 func createRedisPool() *redis.Pool {
