@@ -379,6 +379,14 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("About requested")
 }
 
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	data, err := ioutil.ReadFile("./assets/about.txt")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Fprintf(w, string(data))
+}
+
 func uptimeHandler(w http.ResponseWriter, r *http.Request) {
     //bypass same origin policy
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -394,6 +402,7 @@ func server() {
 	http.HandleFunc("/menu", menuHandler)
 	http.HandleFunc("/menu2", menuHandler2)
 	http.HandleFunc("/", rootHandler)
+	http.HandleFunc("/about", aboutHandler)
 	http.HandleFunc("/uptime", uptimeHandler)
 	http.HandleFunc("/leaderboard", leaderboardHandler)
 	
