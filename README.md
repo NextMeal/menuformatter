@@ -43,5 +43,6 @@ Usage
 
 
 - Listens on port specified in `$PORT` environment variable.
+- Connects to Redis database URL specified in `$REDIS_URL` environment variable.
 
 - Written in Go!
