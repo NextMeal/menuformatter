@@ -55,11 +55,14 @@ func updateLeaderboardWithForm(form url.Values) error {
 
 		c := redisPool.Get()
 		defer c.Close()
-		
+
 		if len(deviceName) == 0 {
 			deviceName = []string{""}
+		} else {
+			//Mask device name
+			deviceName[0] = fmt.Sprintf("%v%v%v", deviceName[0][:1], "***", deviceName[0][len(deviceName[0])-1:len(deviceName[0])])
 		}
-
+		
 		if _, err = redis.String(c.Do("HMSET", strings.Join([]string{deviceIdKey, deviceId[0]}, ":"), deviceNameKey, deviceName[0], seedCountKey, seedCount, leachCountKey, leachCount)); err != nil { return err }
 		if _, err = redis.Int(c.Do("ZADD", goodRatioKey, goodRatio, deviceId[0])); err != nil { return err }
 	} else {
