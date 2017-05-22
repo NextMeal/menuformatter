@@ -33,11 +33,16 @@ Usage
 	    - The next week's menu in JSON.
   - `/uptime`
 	    - Program uptime and requests served.
+  - `/about`
+	    - About info text for Next Meal clients.
   - `/broadcast`
 	    - Any system messages for users to be notified about in plaintext.
 	    - Broadcasts may be specified in `-broadcast` command argument .
+  - `/leaderboard`
+	    - P2P leaderboard.
 
 
 - Listens on port specified in `$PORT` environment variable.
+- Connects to Redis database (for P2P leaderboard data) URL specified in `$REDIS_URL` environment variable.
 
 - Written in Go!
