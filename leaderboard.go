@@ -45,6 +45,7 @@ func updateLeaderboardWithForm(form url.Values) error {
 	if len(deviceId) > 0 && len(form[seedCountKey]) > 0 && len(form[leachCountKey]) > 0{
 		var seedCount, leachCount int
 		var goodRatio float64
+		var uniqueDeviceNameKey string
 		var err error
 		if seedCount, err =  strconv.Atoi(form[seedCountKey][0]); err != nil { return err }
 		if leachCount, err =  strconv.Atoi(form[leachCountKey][0]); err != nil { return err }
@@ -60,11 +61,15 @@ func updateLeaderboardWithForm(form url.Values) error {
 			deviceName = []string{""}
 		} else {
 			//Mask device name
-			deviceName[0] = fmt.Sprintf("%v%v%v", deviceName[0][:1], "***", deviceName[0][len(deviceName[0])-1:len(deviceName[0])])
+			deviceName[0] = fmt.Sprintf("%v%v%v", deviceName[0][:1], "***", deviceName[0][len(deviceName[0])-1:])
 		}
 		
-		if _, err = redis.String(c.Do("HMSET", strings.Join([]string{deviceIdKey, deviceId[0]}, ":"), deviceNameKey, deviceName[0], seedCountKey, seedCount, leachCountKey, leachCount)); err != nil { return err }
+		uniqueDeviceNameKey = strings.Join([]string{deviceIdKey, deviceId[0]}, ":")
+
+		if _, err = redis.String(c.Do("HMSET", uniqueDeviceNameKey, deviceNameKey, deviceName[0], seedCountKey, seedCount, leachCountKey, leachCount)); err != nil { return err }
 		if _, err = redis.Int(c.Do("ZADD", goodRatioKey, goodRatio, deviceId[0])); err != nil { return err }
+		//Format int correctly https://golang.org/pkg/fmt/
+		if _, err = redis.Int(c.Do("EXPIRE", uniqueDeviceNameKey, fmt.Sprintf("%d", int((time.Hour * 24 * 30).Seconds())))); err != nil { return err }
 	} else {
 		//log.Println(generateStatusResponse(-1, "No leaderboard data. "))
 	}
@@ -91,12 +96,18 @@ func createLeaderboardResponse() string {
 	for _, deviceId := range goodRatioSortedSet {
 		c.Send("HGET", strings.Join([]string{deviceIdKey, deviceId}, ":"), deviceNameKey)
 	}
-
 	output, err = c.Do("EXEC")
 	outputArray = output.([]interface{})
 	deviceNameArray = make([]string, 0, len(goodRatioSortedSet))
-	for _, outputString := range outputArray {
-		deviceNameArray = append(deviceNameArray, string(outputString.([]uint8)))
+	for index, outputString := range outputArray {
+		//If the string is nil, the key in the database has expired. Remove the device ID from the sorted set on database and local array and do not convert interface to uint8.
+		if outputString == nil {
+			log.Println("found expired device id")
+			if _, err = redis.Int(c.Do("ZREM", goodRatioKey, goodRatioSortedSet[index])); err != nil { log.Println(fmt.Sprintf("ZREM %v %v had error %v", goodRatioKey, goodRatioSortedSet[index], err.Error())) }
+			goodRatioSortedSet = append(goodRatioSortedSet[:index], goodRatioSortedSet[index+1:]...)
+		} else {
+			deviceNameArray = append(deviceNameArray, string(outputString.([]uint8)))
+		}
 	}
 
 	//Get device score from sorted device ID array
@@ -113,6 +124,7 @@ func createLeaderboardResponse() string {
 		deviceScoreArray = append(deviceScoreArray, outputFloat)
 	}
 
+	//Create output map
 	sortedNameAndScoreArray = make([]map[string]interface{}, 0, len(goodRatioSortedSet))
 	for index, _ := range goodRatioSortedSet {
 		deviceNameAndScoreMap := map[string]interface{}{"deviceName" : deviceNameArray[index], "deviceGoodRatio" : deviceScoreArray[index]}
