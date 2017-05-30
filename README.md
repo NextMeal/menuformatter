@@ -41,6 +41,7 @@ Usage
   - `/leaderboard`
 	    - P2P leaderboard.
 
+- See `google-scripts` branch for menu spreadsheet scripts. 
 
 - Listens on port specified in `$PORT` environment variable.
 - Connects to Redis database (for P2P leaderboard data) URL specified in `$REDIS_URL` environment variable.
